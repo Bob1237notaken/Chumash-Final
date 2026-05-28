@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chumash Final — 6D Study Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d14;
+    --surface: #13131f;
+    --surface2: #1a1a2e;
+    --gold: #d4a843;
+    --gold-light: #f0c96b;
+    --teal: #4ecdc4;
+    --rose: #ff6b6b;
+    --text: #e8e4d9;
+    --text-dim: #8a8570;
+    --border: rgba(212,168,67,0.18);
+    --radius: 14px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,20,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 60px;
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); letter-spacing: 0.04em; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab {
+    background: none; border: none; color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-tab:hover { color: var(--text); background: var(--surface2); }
+  .nav-tab.active { color: var(--gold); background: rgba(212,168,67,0.1); }
+
+  /* HERO */
+  .hero {
+    text-align: center; padding: 4rem 2rem 2.5rem;
+    background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(212,168,67,0.07) 0%, transparent 70%);
+  }
+  .hero-eyebrow { font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.1; }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub { color: var(--text-dim); margin-top: 0.8rem; font-size: 1rem; }
+  .exam-badge {
+    display: inline-block; margin-top: 1.2rem;
+    background: rgba(78,205,196,0.1); border: 1px solid rgba(78,205,196,0.3);
+    color: var(--teal); font-size: 0.8rem; font-weight: 600;
+    padding: 5px 14px; border-radius: 99px; letter-spacing: 0.06em;
+  }
+
+  /* PAGES */
+  .page { display: none; animation: fadeIn 0.3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION WRAPPER */
+  .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* UNIT CARDS */
+  .units-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .unit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.4rem;
+    cursor: pointer;
+    transition: all 0.22s;
+    position: relative; overflow: hidden;
+  }
+  .unit-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+  }
+  .unit-card:hover { border-color: rgba(212,168,67,0.4); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+  .unit-card:hover::before { transform: scaleX(1); }
+  .unit-num { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 0.4rem; }
+  .unit-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: 0.6rem; }
+  .unit-title-heb { font-size: 1.1rem; color: var(--text-dim); direction: rtl; margin-bottom: 0.6rem; }
+  .unit-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.55; }
+  .unit-pill { display: inline-block; margin-top: 0.8rem; font-size: 0.72rem; background: rgba(212,168,67,0.1); color: var(--gold); padding: 3px 10px; border-radius: 99px; }
+
+  /* DETAIL PANEL */
+  .detail-panel { display: none; }
+  .detail-panel.active { display: block; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    padding: 6px 14px; border-radius: 8px; cursor: pointer; margin-bottom: 1.5rem; transition: all 0.18s;
+  }
+  .back-btn:hover { color: var(--text); border-color: var(--gold); }
+
+  .detail-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.3rem; }
+  .detail-heb { font-size: 1.5rem; color: var(--gold); direction: rtl; margin-bottom: 1.2rem; }
+
+  .section-label {
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gold); font-weight: 700; margin: 1.8rem 0 0.8rem;
+  }
+
+  /* VOCAB TABLE */
+  .vocab-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .vocab-table th {
+    text-align: left; padding: 8px 12px; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+    border-bottom: 1px solid var(--border); font-weight: 600;
+  }
+  .vocab-table td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+  .vocab-table tr:hover td { background: var(--surface2); }
+  .heb-word { font-size: 1.15rem; direction: rtl; color: var(--gold-light); font-weight: 500; }
+  .root-badge { font-size: 0.95rem; direction: rtl; background: rgba(212,168,67,0.1); color: var(--gold); padding: 2px 8px; border-radius: 6px; display: inline-block; }
+
+  /* COMMENTARY */
+  .commentary-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--gold); border-radius: var(--radius);
+    padding: 1.1rem 1.3rem; margin-bottom: 0.75rem;
+  }
+  .commentary-source { font-size: 0.78rem; font-weight: 700; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+  .commentary-text { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
+
+  .narrative-box {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem 1.4rem;
+    font-size: 0.9rem; line-height: 1.65; color: var(--text);
+  }
+
+  /* GRAMMAR PAGE */
+  .grammar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.2rem; }
+  @media (max-width: 600px) { .grammar-grid { grid-template-columns: 1fr; } }
+  .grammar-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.3rem;
+  }
+  .grammar-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .grammar-heb { font-size: 1.6rem; direction: rtl; color: var(--gold); margin-bottom: 0.5rem; display: block; }
+  .grammar-card p { font-size: 0.84rem; color: var(--text-dim); line-height: 1.55; }
+  .grammar-card ul { list-style: none; padding: 0; }
+  .grammar-card ul li { font-size: 0.84rem; color: var(--text-dim); padding: 3px 0; }
+  .grammar-card ul li::before { content: '→ '; color: var(--gold); }
+  .example-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .example-heb { direction: rtl; color: var(--gold-light); font-size: 0.95rem; }
+  .example-eng { color: var(--text-dim); font-size: 0.82rem; }
+
+  .suffix-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 0.8rem; }
+  .suffix-table th { text-align: left; padding: 7px 10px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); border-bottom: 1px solid var(--border); }
+  .suffix-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .suffix-table tr:hover td { background: var(--surface2); }
+  .suf-heb { font-size: 1.1rem; direction: rtl; color: var(--gold-light); }
+
+  /* TROP */
+  .trop-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem;
+    margin-bottom: 0.75rem; display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .trop-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--gold); opacity: 0.4; min-width: 32px; }
+  .trop-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .trop-heb { font-size: 1.1rem; direction: rtl; color: var(--gold); margin-bottom: 0.4rem; display: block; }
+  .trop-desc { font-size: 0.84rem; color: var(--text-dim); line-height: 1.55; }
+
+  /* PRACTICE MODE */
+  .practice-setup { text-align: center; padding: 2rem 0; }
+  .practice-setup h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .practice-setup p { color: var(--text-dim); margin-bottom: 1.8rem; font-size: 0.9rem; }
+
+  .mode-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.9rem; margin-bottom: 2rem; }
+  .mode-card {
+    background: var(--surface); border: 2px solid var(--border);
+    border-radius: var(--radius); padding: 1.2rem;
+    cursor: pointer; transition: all 0.22s; text-align: left;
+  }
+  .mode-card.selected { border-color: var(--gold); background: rgba(212,168,67,0.08); }
+  .mode-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .mode-name { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.3rem; }
+  .mode-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.4; }
+
+  .start-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #0d0d14; font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    font-weight: 700; border: none; padding: 12px 32px; border-radius: 10px;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em;
+  }
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,168,67,0.35); }
+  .start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* QUIZ */
+  .quiz-wrapper { max-width: 620px; margin: 0 auto; }
+  .quiz-progress { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .progress-bar { flex: 1; height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--teal)); border-radius: 99px; transition: width 0.4s ease; }
+  .quiz-counter { font-size: 0.8rem; color: var(--text-dim); white-space: nowrap; }
+  .score-chip { font-size: 0.8rem; color: var(--teal); background: rgba(78,205,196,0.1); padding: 3px 10px; border-radius: 99px; }
+
+  .question-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 2rem; margin-bottom: 1rem;
+    text-align: center;
+  }
+  .q-type-badge { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.8rem; }
+  .q-word { font-size: 2.2rem; direction: rtl; color: var(--gold-light); font-weight: 600; line-height: 1.2; margin-bottom: 0.5rem; }
+  .q-unit-hint { font-size: 0.78rem; color: var(--text-dim); }
+
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+  .option-btn {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 12px 14px; text-align: left;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+    color: var(--text); transition: all 0.18s; line-height: 1.4;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(212,168,67,0.07); }
+  .option-btn.correct { border-color: var(--teal); background: rgba(78,205,196,0.1); color: var(--teal); }
+  .option-btn.wrong { border-color: var(--rose); background: rgba(255,107,107,0.1); color: var(--rose); }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    border-radius: 10px; padding: 1rem 1.2rem; margin-top: 0.8rem;
+    font-size: 0.88rem; line-height: 1.55; display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct-fb { background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.25); color: var(--teal); }
+  .feedback-box.wrong-fb { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25); color: var(--rose); }
+
+  .next-btn {
+    width: 100%; margin-top: 0.75rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    font-weight: 600; padding: 11px; border-radius: 10px; cursor: pointer;
+    transition: all 0.18s; display: none;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--gold); color: #0d0d14; border-color: var(--gold); }
+
+  /* RESULTS */
+  .results-card {
+    text-align: center; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem;
+  }
+  .results-score { font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--gold); font-weight: 900; }
+  .results-label { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.3rem; margin-bottom: 1.5rem; }
+  .results-message { font-size: 1rem; line-height: 1.6; margin-bottom: 1.8rem; color: var(--text); }
+  .results-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+  .outline-btn {
+    background: none; border: 1.5px solid var(--border); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.88rem; padding: 10px 22px;
+    border-radius: 9px; cursor: pointer; transition: all 0.18s;
+  }
+  .outline-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SCHEDULE */
+  .schedule-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 1.2rem; }
+  .sched-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.2rem;
+    transition: all 0.18s;
+  }
+  .sched-item:hover { border-color: rgba(212,168,67,0.3); }
+  .sched-date { font-weight: 700; font-size: 0.82rem; color: var(--gold); min-width: 90px; }
+  .sched-content { font-size: 0.86rem; color: var(--text-dim); line-height: 1.55; }
+  .sched-content strong { color: var(--text); }
+  .today-marker { border-color: var(--teal) !important; background: rgba(78,205,196,0.05) !important; }
+  .today-badge { display: inline-block; background: var(--teal); color: #0d0d14; font-size: 0.68rem; font-weight: 700; padding: 1px 7px; border-radius: 99px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.05em; }
+
+  /* TORAH RULES */
+  .rule-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.3rem; margin-bottom: 0.8rem;
+  }
+  .rule-heb { font-size: 1.1rem; direction: rtl; color: var(--gold); margin-bottom: 0.4rem; display: block; }
+  .rule-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .rule-desc { font-size: 0.86rem; color: var(--text-dim); line-height: 1.6; }
+  .rule-examples { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .rule-ex {
+    font-size: 0.82rem; background: var(--surface2);
+    border-radius: 8px; padding: 8px 12px; color: var(--text-dim); line-height: 1.5;
+  }
+  .rule-ex strong { color: var(--text); }
+
+  /* PAGE HEADERS */
+  .page-header { margin-bottom: 1.5rem; }
+  .page-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; }
+  .page-header p { color: var(--text-dim); font-size: 0.88rem; margin-top: 0.3rem; }
+
+  @media (max-width: 500px) {
+    .options-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 1rem; }
+    .nav-logo { font-size: 1rem; }
+    .nav-tab { font-size: 0.75rem; padding: 5px 9px; }
+  }
+
+  /* FLASHCARD MODE */
+  .flashcard-wrap { perspective: 1000px; max-width: 500px; margin: 0 auto 1.2rem; }
+  .flashcard {
+    width: 100%; height: 200px;
+    position: relative; cursor: pointer;
+    transform-style: preserve-3d; transition: transform 0.5s ease;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 2rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .card-face.back { transform: rotateY(180deg); border-color: rgba(212,168,67,0.35); }
+  .card-face .hint { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .card-face .main-word { font-size: 2rem; direction: rtl; color: var(--gold-light); font-weight: 600; }
+  .card-face .unit-tag { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-dim); }
+  .card-face .answer { font-size: 1.1rem; color: var(--text); font-weight: 500; }
+  .card-face .sub { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.4rem; }
+  .flip-hint { text-align: center; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 1rem; }
+  .fc-controls { display: flex; gap: 0.7rem; justify-content: center; }
+  .fc-btn {
+    background: var(--surface); border: 1.5px solid var(--border);
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    font-weight: 600; padding: 9px 22px; border-radius: 9px; cursor: pointer; transition: all 0.18s;
+  }
+  .fc-btn.good { border-color: var(--teal); color: var(--teal); }
+  .fc-btn.good:hover { background: rgba(78,205,196,0.1); }
+  .fc-btn.hard { border-color: var(--rose); color: var(--rose); }
+  .fc-btn.hard:hover { background: rgba(255,107,107,0.1); }
+  .fc-btn:hover:not(.good):not(.hard) { border-color: var(--gold); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">📖 Chumash 6D</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('units')">Units</button>
+    <button class="nav-tab" onclick="showPage('grammar')">Grammar</button>
+    <button class="nav-tab" onclick="showPage('rules')">Torah Rules</button>
+    <button class="nav-tab" onclick="showPage('practice')">Practice</button>
+    <button class="nav-tab" onclick="showPage('schedule')">Schedule</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Bamidbar • ספר במדבר</div>
+  <h1>Your <span>Final Exam</span><br>Study Hub</h1>
+  <div class="hero-sub">6 units · vocab · commentaries · practice mode</div>
+  <div class="exam-badge">📅 Exam: Friday, June 6</div>
+</div>
+
+<!-- ===== UNITS PAGE ===== -->
+<div class="page active" id="page-units">
+  <div id="units-overview">
+    <div class="container">
+      <div class="page-header">
+        <h2>All Units</h2>
+        <p>Click any unit to explore vocabulary, narrative, and commentaries.</p>
+      </div>
+      <div class="units-grid">
+        <div class="unit-card" onclick="showUnit(1)">
+          <div class="unit-num">Unit 1</div>
+          <div class="unit-title-heb">הַמְּנוֹרָה</div>
+          <div class="unit-title">The Menorah</div>
+          <div class="unit-desc">Aharon lights the seven-branched Menorah. Rashi, Ramban & Ohr HaChaim weigh in.</div>
+          <div class="unit-pill">8 vocab words</div>
+        </div>
+        <div class="unit-card" onclick="showUnit(2)">
+          <div class="unit-num">Unit 2</div>
+          <div class="unit-title-heb">נָזִיר</div>
+          <div class="unit-title">The Nazir</div>
+          <div class="unit-desc">A vow of holiness — no wine, no haircuts, no contact with the dead.</div>
+          <div class="unit-pill">11 vocab words</div>
+        </div>
+        <div class="unit-card" onclick="showUnit(3)">
+          <div class="unit-num">Unit 3</div>
+          <div class="unit-title-heb">פֶּסַח שֵׁנִי</div>
+          <div class="unit-title">Pesach Sheni</div>
+          <div class="unit-desc">The "second chance" Pesach for those who were impure. Moshe's humility shines.</div>
+          <div class="unit-pill">10 vocab words</div>
+        </div>
+        <div class="unit-card" onclick="showUnit(4)">
+          <div class="unit-num">Unit 4</div>
+          <div class="unit-title-heb">חֵטְא הַמִּתְאֹונְנִים</div>
+          <div class="unit-title">Sin of Complaints</div>
+          <div class="unit-desc">The mixed multitude craves Egypt's food. Moshe feels overwhelmed; gets 70 elders.</div>
+          <div class="unit-pill">9 vocab words</div>
+        </div>
+        <div class="unit-card" onclick="showUnit(5)">
+          <div class="unit-num">Unit 5</div>
+          <div class="unit-title-heb">חֵטְא מִרְיָם</div>
+          <div class="unit-title">Miriam's Sin</div>
+          <div class="unit-desc">Miriam speaks about Moshe and is punished. The "arrow lesson" on lashon hara.</div>
+          <div class="unit-pill">5 vocab words</div>
+        </div>
+        <div class="unit-card" onclick="showUnit(6)">
+          <div class="unit-num">Unit 6</div>
+          <div class="unit-title-heb">חֵטְא הַמְּרַגְּלִים</div>
+          <div class="unit-title">The Spies</div>
+          <div class="unit-desc">12 spies scout Canaan for 40 days. Word "אֶפֶס" flips the whole report.</div>
+          <div class="unit-pill">7 vocab words</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIT DETAIL -->
+  <div id="unit-detail" class="detail-panel container">
+    <button class="back-btn" onclick="showUnitsOverview()">← Back to Units</button>
+    <div id="unit-detail-content"></div>
+  </div>
+</div>
+
+<!-- ===== GRAMMAR PAGE ===== -->
+<div class="page" id="page-grammar">
+  <div class="container">
+    <div class="page-header">
+      <h2>Grammar & Skills</h2>
+      <p>Prefixes, suffixes, and trop marks — the tools to decode any pasuk.</p>
+    </div>
+
+    <div class="section-label">Prefixes</div>
+    <div class="grammar-grid">
+      <div class="grammar-card">
+        <span class="grammar-heb">הֲ</span>
+        <h3>Hey HaShe'eilah</h3>
+        <p style="margin-bottom:0.8rem">Appears at the start of a word/sentence and turns it into a <strong>yes/no question</strong>.</p>
+        <div class="example-row"><span class="example-heb">הֶחָזָק הוּא</span><span class="example-eng">Is it strong?</span></div>
+        <div class="example-row"><span class="example-heb">הֲרַפֶה</span><span class="example-eng">Is it weak?</span></div>
+        <div class="example-row"><span class="example-heb">הֲרַק אַךְ בְּמֹשֶׁה</span><span class="example-eng">Is it only through Moshe?</span></div>
+      </div>
+      <div class="grammar-card">
+        <span class="grammar-heb">בְּ</span>
+        <h3>Prefix Bet</h3>
+        <ul>
+          <li><strong>In / At</strong> — location or time<br><span style="color:var(--gold-light);direction:rtl;display:block;font-size:0.95rem">בְּמִדְבַּר סִינַי</span><span style="color:var(--text-dim);font-size:0.8rem">In the Wilderness of Sinai</span></li>
+          <li style="margin-top:0.5rem"><strong>Against</strong> — opposition<br><span style="color:var(--gold-light);direction:rtl;display:block;font-size:0.88rem">וַתְּדַבֵּר מִרְיָם בְּמֹשֶׁה</span><span style="color:var(--text-dim);font-size:0.8rem">Miriam spoke against Moshe</span></li>
+        </ul>
+      </div>
+      <div class="grammar-card">
+        <span class="grammar-heb">כִּי</span>
+        <h3>Ki — Three Meanings</h3>
+        <p>Always use context clues to determine which meaning applies:</p>
+        <ul style="margin-top:0.6rem">
+          <li><strong>Because</strong></li>
+          <li><strong>If</strong></li>
+          <li><strong>When</strong></li>
+        </ul>
+      </div>
+      <div class="grammar-card">
+        <span class="grammar-heb">אֲשֶׁר</span>
+        <h3>Asher — Connector</h3>
+        <p>Connects ideas and adds description.</p>
+        <ul style="margin-top:0.6rem">
+          <li>Means <strong>which</strong> or <strong>that</strong></li>
+          <li>Links a noun to extra detail</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem">Suffixes (Word Endings)</div>
+    <div class="grammar-card" style="margin-top:0.5rem">
+      <table class="suffix-table">
+        <thead><tr><th>Suffix</th><th>Meaning</th><th>Example</th><th>Translation</th></tr></thead>
+        <tbody>
+          <tr><td class="suf-heb">וֹ–</td><td>His</td><td class="suf-heb">אִמּוֹ</td><td>His mother</td></tr>
+          <tr><td class="suf-heb">וֹ–</td><td>His</td><td class="suf-heb">נִזְרוֹ</td><td>His separation</td></tr>
+          <tr><td class="suf-heb">כֶם–</td><td>Your (plural)</td><td class="suf-heb">נְבִיאֲכֶם</td><td>Your prophet</td></tr>
+          <tr><td class="suf-heb">הֶם / םֶ–</td><td>Their / Them</td><td class="suf-heb">שִׁנֵּיהֶם</td><td>Their teeth</td></tr>
+          <tr><td class="suf-heb">הֶם / לָהֶם</td><td>To them / For them</td><td class="suf-heb">עֲלֵיהֶם</td><td>Upon them</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem">Trop Marks (טַעֲמֵי הַמִּקְרָא)</div>
+    <p style="color:var(--text-dim);font-size:0.86rem;margin-bottom:1rem">These tell you how to <em>group</em> words into ideas — not just how to sing!</p>
+
+    <div class="trop-card">
+      <div class="trop-num">1</div>
+      <div>
+        <span class="trop-heb">מֶרְכָא טִפְחָא</span>
+        <div class="trop-name">The Connector</div>
+        <div class="trop-desc">Connects words together into one phrase — read as a single idea, like "yellow bus."</div>
+      </div>
+    </div>
+    <div class="trop-card">
+      <div class="trop-num">2</div>
+      <div>
+        <span class="trop-heb">אֶתְנַחְתָּא</span>
+        <div class="trop-name">The Big Break</div>
+        <div class="trop-desc">The main pause in the middle of a verse. Splits the pasuk into its two main parts. Big pause!</div>
+      </div>
+    </div>
+    <div class="trop-card">
+      <div class="trop-num">3</div>
+      <div>
+        <span class="trop-heb">זָקֵף קָטֹון</span>
+        <div class="trop-name">The Small Pause</div>
+        <div class="trop-desc">A smaller pause than אֶתְנַחְתָּא — a brief break, not the end of a major section.</div>
+      </div>
+    </div>
+    <div class="trop-card">
+      <div class="trop-num">4</div>
+      <div>
+        <span class="trop-heb">סוֹף פָּסוּק</span>
+        <div class="trop-name">End of Verse</div>
+        <div class="trop-desc">The "stop sign" at the very end of a פָּסוּק.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TORAH RULES PAGE ===== -->
+<div class="page" id="page-rules">
+  <div class="container">
+    <div class="page-header">
+      <h2>Essential Torah Rules</h2>
+      <p>Three big principles Rashi uses to explain the Torah.</p>
+    </div>
+
+    <div class="rule-card">
+      <span class="rule-heb">סְמִיכוּת פָּרָשִׁיּוֹת</span>
+      <div class="rule-name">Juxtaposition</div>
+      <div class="rule-desc">The Torah places two sections next to each other on purpose — to teach a specific lesson. Even if the events happened at different times, the placement conveys meaning.</div>
+      <div class="rule-examples">
+        <div class="rule-ex"><strong>Bamidbar 8:2</strong> — The lighting of the Menorah follows the offerings of the Nesi'im → Aharon felt left out, so Hashem comforted him with the Menorah mitzvah.</div>
+        <div class="rule-ex"><strong>Bamidbar 9:1</strong> — Pesach Sheni appears here even though it happened earlier → Rashi explains the Torah chose this placement intentionally.</div>
+        <div class="rule-ex"><strong>Bamidbar 13:2</strong> — The Spies story follows Miriam's sin → The spies saw Miriam punished for lashon hara yet failed to learn from it.</div>
+      </div>
+    </div>
+
+    <div class="rule-card">
+      <span class="rule-heb">אֵין מוּקְדָם וּמְאוּחָר בַּתּוֹרָה</span>
+      <div class="rule-name">The Torah Is Not in Chronological Order</div>
+      <div class="rule-desc">The Torah is organized to teach themes and ideas, not strictly by when events happened. The order of the text teaches lessons beyond just history.</div>
+      <div class="rule-examples">
+        <div class="rule-ex"><strong>Bamidbar 9:1</strong> — Pesach Sheni (14 Nissan, Year 1) appears after events from the 2nd year. The Torah placed it here for a reason beyond timeline.</div>
+      </div>
+    </div>
+
+    <div class="rule-card">
+      <span class="rule-heb">גְּזֵרָה שָׁוָה</span>
+      <div class="rule-name">Shared Phrase — Learning Between Verses</div>
+      <div class="rule-desc">When two verses share the same exact phrase or word, we learn information from one verse and apply it to the other.</div>
+      <div class="rule-examples">
+        <div class="rule-ex"><strong>Example:</strong> The Torah says the עֵדָה gathered at the אֹהֶל מוֹעֵד — we learn the נְשִׂיאִים (leaders) did as well, because they share the same phrase.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRACTICE PAGE ===== -->
+<div class="page" id="page-practice">
+  <div class="container">
+    <div id="practice-setup-screen" class="practice-setup">
+      <h2>Practice Mode</h2>
+      <p>Choose your mode and we'll quiz you on the material.</p>
+
+      <div class="section-label" style="text-align:left">Choose a Mode</div>
+      <div class="mode-grid">
+        <div class="mode-card selected" id="mode-mc" onclick="selectMode('mc')">
+          <div class="mode-icon">🎯</div>
+          <div class="mode-name">Multiple Choice</div>
+          <div class="mode-desc">4 answer options per question. Great for vocab.</div>
+        </div>
+        <div class="mode-card" id="mode-fc" onclick="selectMode('fc')">
+          <div class="mode-icon">🃏</div>
+          <div class="mode-name">Flashcards</div>
+          <div class="mode-desc">Flip cards to reveal the answer. Track what you know.</div>
+        </div>
+        <div class="mode-card" id="mode-com" onclick="selectMode('com')">
+          <div class="mode-icon">📜</div>
+          <div class="mode-name">Commentary Quiz</div>
+          <div class="mode-desc">Match the commentary to the right source.</div>
+        </div>
+        <div class="mode-card" id="mode-heb" onclick="selectMode('heb')">
+          <div class="mode-icon">✡️</div>
+          <div class="mode-name">Hebrew → English</div>
+          <div class="mode-desc">See the Hebrew root, type the meaning.</div>
+        </div>
+      </div>
+
+      <div class="section-label" style="text-align:left">Filter by Unit</div>
+      <div class="mode-grid" id="unit-filter-grid">
+        <div class="mode-card selected" id="filter-all" onclick="selectFilter('all')">
+          <div class="mode-name">All Units</div>
+          <div class="mode-desc">Mix everything together.</div>
+        </div>
+        <div class="mode-card" id="filter-1" onclick="selectFilter('1')"><div class="mode-name">Unit 1 — Menorah</div></div>
+        <div class="mode-card" id="filter-2" onclick="selectFilter('2')"><div class="mode-name">Unit 2 — Nazir</div></div>
+        <div class="mode-card" id="filter-3" onclick="selectFilter('3')"><div class="mode-name">Unit 3 — Pesach Sheni</div></div>
+        <div class="mode-card" id="filter-4" onclick="selectFilter('4')"><div class="mode-name">Unit 4 — Complaints</div></div>
+        <div class="mode-card" id="filter-5" onclick="selectFilter('5')"><div class="mode-name">Unit 5 — Miriam</div></div>
+        <div class="mode-card" id="filter-6" onclick="selectFilter('6')"><div class="mode-name">Unit 6 — Spies</div></div>
+      </div>
+
+      <button class="start-btn" onclick="startPractice()">Start Practice →</button>
+    </div>
+
+    <div id="practice-quiz-screen" style="display:none">
+      <div class="quiz-wrapper">
+        <div class="quiz-progress">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="quiz-counter" id="quiz-counter">1 / 10</div>
+          <div class="score-chip" id="score-chip">⭐ 0</div>
+        </div>
+        <div id="quiz-content"></div>
+      </div>
+    </div>
+
+    <div id="practice-results-screen" style="display:none">
+      <div class="quiz-wrapper">
+        <div class="results-card">
+          <div class="results-score" id="results-score">0/0</div>
+          <div class="results-label">Questions Correct</div>
+          <div class="results-message" id="results-message"></div>
+          <div class="results-actions">
+            <button class="start-btn" onclick="startPractice()">Try Again</button>
+            <button class="outline-btn" onclick="showPracticeSetup()">Change Mode</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCHEDULE PAGE ===== -->
+<div class="page" id="page-schedule">
+  <div class="container">
+    <div class="page-header">
+      <h2>Study Schedule</h2>
+      <p>Follow this plan and you'll be ready. Today's item is highlighted.</p>
+    </div>
+    <div class="schedule-list" id="schedule-list"></div>
+  </div>
+</div>
+
+<script>
+// ========== DATA ==========
+const units = {
+  1: {
+    title: "The Menorah", heb: "הַמְּנוֹרָה", unit: "Unit 1",
+    narrative: "אַהֲרֹן is commanded to light and beautify the seven-branched Menorah in the Mishkan.",
+    commentaries: [
+      { source: "רַשִׁ״י", text: "Aharon was upset (halsha da'ato) because his tribe was not included in the dedication of the Mishkan. Hashem comforted him by giving him a greater honor: lighting the Menorah every day." },
+      { source: "רַמְבַּ״ן", text: "Aharon was very eager (mizdarez) and personally made sure to light the Menorah himself every day." },
+      { source: "אוֹר הַחַיִּים", text: "Aharon did the mitzvah with pure intentions, only for Hashem — not for honor or recognition." },
+    ],
+    vocab: [
+      { heb: "בְּהַעֲלֹתְךָ", root: "ע-ל-ה", rootMeaning: "To go up", meaning: "When you light (the candles) / go up" },
+      { heb: "וּמֵיטִב", root: "י-ט-ב", rootMeaning: "To be good/better", meaning: "To prepare, set up, or light" },
+      { heb: "מַעֲלָה", root: "ע-ל-ה", rootMeaning: "To go up", meaning: "A step (the Kohen stands on this)" },
+      { heb: "נִסְמְכָה", root: "ס-מ-ך", rootMeaning: "To support/lean", meaning: "Connected to or next to" },
+      { heb: "שַׁלְהֶבֶת", root: "—", rootMeaning: "—", meaning: "A flame" },
+      { heb: "נֵר", root: "—", rootMeaning: "—", meaning: "A light or candle" },
+      { heb: "חָלְשָׁה דַּעְתּוֹ", root: "—", rootMeaning: "—", meaning: "He was disappointed or upset" },
+    ]
+  },
+  2: {
+    title: "The Nazir", heb: "נָזִיר", unit: "Unit 2",
+    narrative: "A person becomes a Nazir by taking a vow of holiness. The three rules: no wine or grapes, no cutting hair, no contact with the dead.",
+    commentaries: [
+      { source: "סְפוֹרְנוֹ", text: "A father sends his son on an important mission, but the son becomes busy with other good deeds. The father is disappointed because the son lost focus. This explains why a Nazir must avoid even good things so he can stay focused on his special role." },
+      { source: "Shimshon", text: "שִׁמְשׁוֹן was a Nazir from birth. His strength came from Hashem — his mistake was thinking his power came from his hair instead of his connection to Hashem." },
+    ],
+    vocab: [
+      { heb: "נֶדֶר", root: "נ-ד-ר", rootMeaning: "To vow", meaning: "A vow or promise" },
+      { heb: "לְהַזִּיר", root: "נ-ז-ר", rootMeaning: "To separate", meaning: "To set apart or separate oneself" },
+      { heb: "עַד מְלֹאת הַיָּמִים", root: "מ-ל-א", rootMeaning: "To be full", meaning: "Until the days are fulfilled" },
+      { heb: "נֵזֶר", root: "נ-ז-ר", rootMeaning: "To separate", meaning: "A crown or separation (his holiness)" },
+      { heb: "חַרְצַנִּים", root: "—", rootMeaning: "—", meaning: "Grape seeds" },
+      { heb: "זָג", root: "—", rootMeaning: "—", meaning: "Grape skins" },
+      { heb: "תַּעַר", root: "—", rootMeaning: "—", meaning: "A razor" },
+      { heb: "פֶּרַע שֵׂעָר", root: "—", rootMeaning: "—", meaning: "Locks of hair" },
+      { heb: "גֶּפֶן / יַיִן / עֵנָבִים", root: "—", rootMeaning: "—", meaning: "Grapevine / Wine / Grapes" },
+      { heb: "מֵת / טֻמְאָה", root: "—", rootMeaning: "—", meaning: "Dead body / Impurity" },
+      { heb: "פִּתְאֹם", root: "—", rootMeaning: "—", meaning: "Suddenly" },
+    ]
+  },
+  3: {
+    title: "Pesach Sheni", heb: "פֶּסַח שֵׁנִי", unit: "Unit 3",
+    narrative: "Some people became impure (טָמֵא) and couldn't bring the Korban Pesach. They asked Moshe: 'Why should we lose out?' (לָמָה נִגָּרַע). Moshe didn't decide himself — he said 'Stand and I will hear what Hashem commands.' Rules: (1) 14th of Iyar (2) chametz is allowed in your house (3) you cannot eat chametz with the korban.",
+    commentaries: [
+      { source: "Moshe's Humility", text: "Moshe did not make the decision himself — he waited for Hashem's answer. This shows great humility and is a lesson for all leaders." },
+    ],
+    vocab: [
+      { heb: "בֵּין הָעַרְבַּיִם", root: "ע-ר-ב", rootMeaning: "Evening", meaning: "Twilight / between the two evenings" },
+      { heb: "בְּמוֹעֲדֹו", root: "י-ע-ד", rootMeaning: "Appointed time", meaning: "In its set time / at its proper time" },
+      { heb: "חֻקֹּתָיו", root: "ח-ק-ק", rootMeaning: "Law", meaning: "Its statutes or laws" },
+      { heb: "מִשְׁפָּטָיו", root: "ש-פ-ט", rootMeaning: "Judge", meaning: "Its rules or judgments" },
+      { heb: "וַיִּקְרְבוּ", root: "ק-ר-ב", rootMeaning: "To be near", meaning: "And they approached" },
+      { heb: "נִגָּרַע", root: "ג-ר-ע", rootMeaning: "To diminish", meaning: "We are excluded / should we lose out" },
+      { heb: "הָרְחֹקָה", root: "ר-ח-ק", rootMeaning: "To be far", meaning: "Far away or distant" },
+      { heb: "יַשְׁאִירוּ", root: "ש-א-ר", rootMeaning: "To remain", meaning: "They shall leave over" },
+      { heb: "שְׁבָרוּ", root: "ש-ב-ר", rootMeaning: "To break", meaning: "They shall break" },
+      { heb: "עֶצֶם", root: "—", rootMeaning: "—", meaning: "A bone" },
+    ]
+  },
+  4: {
+    title: "Sin of Complaints", heb: "חֵטְא הַמִּתְאֹונְנִים", unit: "Unit 4",
+    narrative: "The 'mixed multitude' (אַסַפְסֻף) complained about the manna and craved the foods of Egypt. Moshe felt overwhelmed — like a nurse carrying a baby. Hashem helped by appointing 70 elders to share leadership with him.",
+    commentaries: [
+      { source: "Moshe's Burden", text: "Moshe compared himself to a nurse carrying a baby — showing how heavy the burden of leadership felt. Hashem responded with compassion by creating a team of 70 elders." },
+    ],
+    vocab: [
+      { heb: "הִתְאַוּוּ תַּאֲוָה", root: "א-ו-ה", rootMeaning: "To desire", meaning: "They strongly craved/desired" },
+      { heb: "זָכַרְנוּ", root: "ז-כ-ר", rootMeaning: "To remember", meaning: "We remembered" },
+      { heb: "בֹּכֶה", root: "ב-כ-ה", rootMeaning: "To cry", meaning: "Weeping/crying" },
+      { heb: "וַיִּחַר אַף", root: "ח-ר-ה", rootMeaning: "To kindle/be angry", meaning: "His anger was kindled" },
+      { heb: "הָאַסַפְסֻף", root: "—", rootMeaning: "—", meaning: "The mixed multitude / outsiders" },
+      { heb: "חִנָּם", root: "—", rootMeaning: "—", meaning: "For free" },
+      { heb: "קִשֻּׁאִים / אֲבַטִּחִים", root: "—", rootMeaning: "—", meaning: "Cucumbers / Watermelons" },
+      { heb: "חָצִיר / בְּצָלִים / שׁוּמִים", root: "—", rootMeaning: "—", meaning: "Leeks / Onions / Garlic" },
+      { heb: "נַפְשֵׁנוּ יְבֵשָׁה", root: "—", rootMeaning: "—", meaning: "Our spirit is dried up / we feel empty" },
+    ]
+  },
+  5: {
+    title: "Miriam's Sin", heb: "חֵטְא מִרְיָם", unit: "Unit 5",
+    narrative: "מִרְיָם and אַהֲרֹן spoke about Moshe's wife. Hashem defended Moshe and described him as His most faithful servant. Miriam was punished with tzara'at.",
+    commentaries: [
+      { source: "רַשִׁ״י", text: "Miriam never intended to be harmful in her speech, yet she caused harm and was punished. How much more so can someone cause harm and be punished when they intend to cause harm!" },
+      { source: "מִדְרַשׁ תְּהִלִּים", text: "The tongue is like an arrow, not like a sword. Once words are spoken, they cannot be taken back — just like an arrow that has been shot." },
+    ],
+    vocab: [
+      { heb: "וַתְּדַבֵּר", root: "ד-ב-ר", rootMeaning: "To speak", meaning: "She spoke (harshly)" },
+      { heb: "וַיֹּאמְרוּ", root: "א-מ-ר", rootMeaning: "To say", meaning: "And they said (regular speech)" },
+      { heb: "מְצֹרַעַת", root: "צ-ר-ע", rootMeaning: "Skin disease", meaning: "Afflicted with tzara'at" },
+      { heb: "נוֹאַלְנוּ", root: "י-א-ל", rootMeaning: "To be foolish", meaning: "We have acted foolishly / sinned" },
+      { heb: "נָסַע", root: "נ-ס-ע", rootMeaning: "To travel", meaning: "Journeyed / traveled" },
+    ]
+  },
+  6: {
+    title: "The Spies", heb: "חֵטְא הַמְּרַגְּלִים", unit: "Unit 6",
+    narrative: "Twelve spies were sent to scout Eretz Canaan for 40 days. They returned with giant fruit but gave a negative report using the word 'אֶפֶס' to flip everything positive they said.",
+    commentaries: [
+      { source: "רַשִׁ״י", text: "Hashem allowed the mission only because the people requested it — 'שְׁלַח לְךָ' means 'send for yourself,' showing this was not Hashem's preference." },
+      { source: "רַמְבַּ״ן", text: "Sending spies is normal military strategy. It shows that people should act in a natural way and not rely only on miracles." },
+      { source: "מַלְבִּי״ם", text: "The spies used the word 'אֶפֶס' (however) to cancel out the good things they had said and create fear in the nation." },
+      { source: "רַב הִירְשׁ", text: "כָּלֵב spoke instead of יְהוֹשֻׁעַ because the people would have dismissed Yehoshua as biased toward Moshe, his teacher." },
+    ],
+    vocab: [
+      { heb: "שְׁלַח", root: "ש-ל-ח", rootMeaning: "To send", meaning: "Send" },
+      { heb: "וְיָתֻרוּ", root: "ת-ו-ר", rootMeaning: "To scout/tour", meaning: "And they scouted/toured" },
+      { heb: "מַטֶּה / נָשִׂיא", root: "—", rootMeaning: "—", meaning: "A tribe (staff) / A prince" },
+      { heb: "רָפֶה / מְעַט", root: "—", rootMeaning: "—", meaning: "Weak / few (little)" },
+      { heb: "מַחֲנִים / מִבְצָרִים", root: "—", rootMeaning: "—", meaning: "Open camps (towns) / Fortified cities" },
+      { heb: "רָזָה / בִּכּוּרֵי", root: "—", rootMeaning: "—", meaning: "Thin / first crop" },
+      { heb: "אֶפֶס", root: "—", rootMeaning: "—", meaning: "However / but (flips the report!)" },
+    ]
+  }
+};
+
+const scheduleData = [
+  { date: "Tue 5/26", topic: "Unit 1: The Menorah & Good Vibes", detail: "Learn how Aharon felt left out. Practice root ע-ל-ה and words like שַׁלְהֶבֶת." },
+  { date: "Wed 5/27", topic: "Unit 2: The Nazir's Rules", detail: "3 things a Nazir can't do: no wine, no haircuts, no touching dead bodies. Learn נֶדֶר." },
+  { date: "Thu 5/28", topic: "Grammar Skills: Word Endings", detail: "וֹ = his · כֶם = your · הֶם = their. Also: כִּי = because / if / when." },
+  { date: "Fri 5/29", topic: "Unit 3: Pesach Sheni", detail: "The impure people ask 'Why should we lose out?' Pesach Sheni = 14 Iyar." },
+  { date: "Sat 5/30", topic: "Trop Marks: The Reading Map", detail: "אֶתְנַחְתָּא = big pause. סוֹף פָּסוּק = end of verse. They group words into ideas!" },
+  { date: "Sun 5/31", topic: "Special Torah Rules", detail: "Juxtaposition: why does the Spies story follow Miriam's story? Torah isn't always in time order." },
+  { date: "Mon 6/1", topic: "Unit 4: The Craving & Complaints", detail: "The mixed multitude complained. Moshe got 70 elders to help. Review אַסַפְסֻף and food words." },
+  { date: "Tue 6/2", topic: "Unit 5: Miriam's Mistake", detail: "Miriam spoke about Moshe → tzara'at. The Arrow Lesson: words can't be taken back." },
+  { date: "Wed 6/3", topic: "Unit 6: The Spy Mission", detail: "12 spies, 40 days. Learn אֶפֶס — the word that flipped the entire report." },
+  { date: "Thu 6/4", topic: "Big Vocab Challenge", detail: "Go through all vocab tables. Spot הֲ at the start of a word — it makes a yes/no question!" },
+  { date: "Fri 6/5", topic: "🎓 FINAL EXAM DAY", detail: "Take a quick look at Essential Torah Rules one last time. You've got this!" },
+];
+
+// ========== NAV ==========
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const order = ['units','grammar','rules','practice','schedule'];
+  tabs[order.indexOf(id)].classList.add('active');
+  if (id === 'schedule') renderSchedule();
+}
+
+// ========== UNITS ==========
+function showUnit(num) {
+  document.getElementById('units-overview').style.display = 'none';
+  const panel = document.getElementById('unit-detail');
+  panel.classList.add('active');
+  const u = units[num];
+  let html = `
+    <div class="detail-title">${u.title}</div>
+    <div class="detail-heb">${u.heb}</div>
+    <div class="section-label">Narrative</div>
+    <div class="narrative-box">${u.narrative}</div>
+    <div class="section-label">Vocabulary (${u.vocab.length} words)</div>
+    <table class="vocab-table">
+      <thead><tr><th>Hebrew Word</th><th>Root</th><th>Root Meaning</th><th>Translation</th></tr></thead>
+      <tbody>
+        ${u.vocab.map(v => `<tr>
+          <td><span class="heb-word">${v.heb}</span></td>
+          <td><span class="root-badge">${v.root}</span></td>
+          <td>${v.rootMeaning}</td>
+          <td>${v.meaning}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div class="section-label">Commentaries</div>
+    ${u.commentaries.map(c => `
+      <div class="commentary-card">
+        <div class="commentary-source">${c.source}</div>
+        <div class="commentary-text">${c.text}</div>
+      </div>`).join('')}
+  `;
+  document.getElementById('unit-detail-content').innerHTML = html;
+  window.scrollTo(0, 0);
+}
+
+function showUnitsOverview() {
+  document.getElementById('units-overview').style.display = 'block';
+  document.getElementById('unit-detail').classList.remove('active');
+}
+
+// ========== SCHEDULE ==========
+function renderSchedule() {
+  const today = new Date();
+  const list = document.getElementById('schedule-list');
+  // May 26 = index 0
+  const base = new Date(2026, 4, 26);
+  list.innerHTML = scheduleData.map((item, i) => {
+    const d = new Date(base); d.setDate(base.getDate() + i);
+    const isToday = d.toDateString() === today.toDateString();
+    return `<div class="sched-item ${isToday ? 'today-marker' : ''}">
+      <div class="sched-date">${item.date}${isToday ? '<span class="today-badge">TODAY</span>' : ''}</div>
+      <div class="sched-content"><strong>${item.topic}</strong><br>${item.detail}</div>
+    </div>`;
+  }).join('');
+}
+
+// ========== PRACTICE ==========
+let selectedMode = 'mc';
+let selectedFilter = 'all';
+let quizQuestions = [];
+let currentQ = 0;
+let score = 0;
+
+function selectMode(m) {
+  selectedMode = m;
+  document.querySelectorAll('.mode-card[id^="mode-"]').forEach(c => c.classList.remove('selected'));
+  document.getElementById('mode-' + m).classList.add('selected');
+}
+
+function selectFilter(f) {
+  selectedFilter = f;
+  document.querySelectorAll('.mode-card[id^="filter-"]').forEach(c => c.classList.remove('selected'));
+  document.getElementById('filter-' + f).classList.add('selected');
+}
+
+function getAllVocab(filter) {
+  const keys = filter === 'all' ? Object.keys(units) : [filter];
+  let all = [];
+  keys.forEach(k => {
+    units[k].vocab.forEach(v => all.push({ ...v, unitNum: k, unitTitle: units[k].title }));
+  });
+  return all;
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+function startPractice() {
+  currentQ = 0; score = 0;
+  document.getElementById('practice-setup-screen').style.display = 'none';
+  document.getElementById('practice-results-screen').style.display = 'none';
+  document.getElementById('practice-quiz-screen').style.display = 'block';
+
+  if (selectedMode === 'fc') { startFlashcards(); return; }
+  if (selectedMode === 'com') { startCommentaryQuiz(); return; }
+
+  const vocab = shuffle(getAllVocab(selectedFilter)).slice(0, 12);
+  const allMeanings = getAllVocab('all').map(v => v.meaning);
+
+  quizQuestions = vocab.map(v => {
+    const distractors = shuffle(allMeanings.filter(m => m !== v.meaning)).slice(0, 3);
+    const options = shuffle([v.meaning, ...distractors]);
+    return { question: v.heb, correct: v.meaning, options, unit: `Unit ${v.unitNum} — ${v.unitTitle}`, type: 'vocab' };
+  });
+  renderMCQuestion();
+}
+
+function renderMCQuestion() {
+  if (currentQ >= quizQuestions.length) { showResults(); return; }
+  const q = quizQuestions[currentQ];
+  const pct = (currentQ / quizQuestions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('quiz-counter').textContent = `${currentQ + 1} / ${quizQuestions.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${score}`;
+
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="question-card">
+      <div class="q-type-badge">What does this mean?</div>
+      <div class="q-word">${q.question}</div>
+      <div class="q-unit-hint">${q.unit}</div>
+    </div>
+    <div class="options-grid">
+      ${q.options.map(opt => `<button class="option-btn" onclick="checkAnswer(this, '${opt.replace(/'/g,"\\'")}', '${q.correct.replace(/'/g,"\\'")}')"> ${opt}</button>`).join('')}
+    </div>
+    <div id="feedback-box" class="feedback-box"></div>
+    <button id="next-btn" class="next-btn" onclick="nextQuestion()">Next Question →</button>
+  `;
+}
+
+function checkAnswer(btn, chosen, correct) {
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback-box');
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    score++;
+    fb.className = 'feedback-box correct-fb show';
+    fb.textContent = '✓ Correct! Great job.';
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'feedback-box wrong-fb show';
+    fb.textContent = `✗ The answer was: "${correct}"`;
+    document.querySelectorAll('.option-btn').forEach(b => {
+      if (b.textContent.trim() === correct) b.classList.add('correct');
+    });
+  }
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() { currentQ++; renderMCQuestion(); }
+
+// COMMENTARY QUIZ
+function startCommentaryQuiz() {
+  const allCommentaries = [];
+  Object.values(units).forEach(u => {
+    u.commentaries.forEach(c => allCommentaries.push({ ...c, unitTitle: u.title }));
+  });
+  const picked = shuffle(allCommentaries).slice(0, 8);
+  const allSources = [...new Set(allCommentaries.map(c => c.source))];
+
+  quizQuestions = picked.map(c => {
+    const distractors = shuffle(allSources.filter(s => s !== c.source)).slice(0, 3);
+    const options = shuffle([c.source, ...distractors]);
+    return { question: c.text, correct: c.source, options, unit: `About ${c.unitTitle}`, type: 'commentary' };
+  });
+  renderCommentaryQuestion();
+}
+
+function renderCommentaryQuestion() {
+  if (currentQ >= quizQuestions.length) { showResults(); return; }
+  const q = quizQuestions[currentQ];
+  const pct = (currentQ / quizQuestions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('quiz-counter').textContent = `${currentQ + 1} / ${quizQuestions.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${score}`;
+
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="question-card" style="text-align:left">
+      <div class="q-type-badge">Which commentator said this?</div>
+      <div style="font-size:0.9rem;line-height:1.6;margin:0.8rem 0;color:var(--text)">"${q.question}"</div>
+      <div class="q-unit-hint">${q.unit}</div>
+    </div>
+    <div class="options-grid">
+      ${q.options.map(opt => `<button class="option-btn" onclick="checkAnswer(this, '${opt.replace(/'/g,"\\'")}', '${q.correct.replace(/'/g,"\\'")}')"> ${opt}</button>`).join('')}
+    </div>
+    <div id="feedback-box" class="feedback-box"></div>
+    <button id="next-btn" class="next-btn" onclick="nextCommentaryQ()">Next Question →</button>
+  `;
+}
+
+function nextCommentaryQ() { currentQ++; renderCommentaryQuestion(); }
+
+// FLASHCARDS
+let fcIndex = 0;
+let fcCards = [];
+let fcFlipped = false;
+
+function startFlashcards() {
+  fcCards = shuffle(getAllVocab(selectedFilter));
+  fcIndex = 0;
+  renderFlashcard();
+}
+
+function renderFlashcard() {
+  if (fcIndex >= fcCards.length) { showFlashcardDone(); return; }
+  const card = fcCards[fcIndex];
+  const pct = (fcIndex / fcCards.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('quiz-counter').textContent = `${fcIndex + 1} / ${fcCards.length}`;
+  document.getElementById('score-chip').textContent = `⭐ ${score}`;
+
+  document.getElementById('quiz-content').innerHTML = `
+    <div class="flip-hint">Tap the card to reveal the meaning</div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="fc" onclick="flipCard()">
+        <div class="card-face front">
+          <div class="hint">Hebrew Word</div>
+          <div class="main-word">${card.heb}</div>
+          <div class="unit-tag">Unit ${card.unitNum} — ${card.unitTitle}</div>
+        </div>
+        <div class="card-face back">
+          <div class="hint">Meaning</div>
+          <div class="answer">${card.meaning}</div>
+          <div class="sub">${card.root !== '—' ? `Root: ${card.root} — ${card.rootMeaning}` : ''}</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-controls" id="fc-controls" style="display:none">
+      <button class="fc-btn hard" onclick="fcNext(false)">😓 Hard</button>
+      <button class="fc-btn" onclick="fcNext(null)">😐 Ok</button>
+      <button class="fc-btn good" onclick="fcNext(true)">✓ Got it!</button>
+    </div>
+  `;
+  fcFlipped = false;
+}
+
+function flipCard() {
+  document.getElementById('fc').classList.toggle('flipped');
+  fcFlipped = true;
+  document.getElementById('fc-controls').style.display = 'flex';
+}
+
+function fcNext(correct) {
+  if (correct === true) score++;
+  fcIndex++;
+  renderFlashcard();
+}
+
+function showFlashcardDone() {
+  document.getElementById('quiz-content').innerHTML = ``;
+  document.getElementById('practice-quiz-screen').style.display = 'none';
+  document.getElementById('practice-results-screen').style.display = 'block';
+  document.getElementById('results-score').textContent = `${score}/${fcCards.length}`;
+  document.getElementById('results-label').textContent = 'Cards Marked "Got it!"';
+  const pct = Math.round(score / fcCards.length * 100);
+  document.getElementById('results-message').innerHTML = getResultMessage(pct);
+}
+
+function showResults() {
+  document.getElementById('practice-quiz-screen').style.display = 'none';
+  document.getElementById('practice-results-screen').style.display = 'block';
+  const total = quizQuestions.length;
+  const pct = Math.round(score / total * 100);
+  document.getElementById('results-score').textContent = `${score}/${total}`;
+  document.getElementById('results-label').textContent = 'Questions Correct';
+  document.getElementById('results-message').innerHTML = getResultMessage(pct);
+}
+
+function getResultMessage(pct) {
+  if (pct === 100) return "🏆 Perfect score! You are 100% ready for the final!";
+  if (pct >= 80) return "🌟 Excellent! You really know this material. Review any misses and you're set.";
+  if (pct >= 60) return "👍 Good work! A bit more review and you'll ace it.";
+  return "📖 Keep studying! Go back and review the vocab tables — you've got this!";
+}
+
+function showPracticeSetup() {
+  document.getElementById('practice-quiz-screen').style.display = 'none';
+  document.getElementById('practice-results-screen').style.display = 'none';
+  document.getElementById('practice-setup-screen').style.display = 'block';
+}
+</script>
+</body>
+</html>
